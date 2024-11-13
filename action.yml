@@ -1,5 +1,7 @@
 name: "DevOps Tools - SonarScanner, Terraform and Kubectl"
 description: "Runs SonarScanner, Terraform, and kubectl commands in a containerized GitHub Action."
+icon: 
+color: gray-dark
 
 runs:
   using: "docker"
