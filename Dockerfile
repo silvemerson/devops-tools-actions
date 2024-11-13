@@ -29,5 +29,11 @@ RUN wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_am
 # Adiciona o SonarScanner ao PATH
 ENV PATH="/opt/sonar-scanner-4.8.0.2856-linux/bin:${PATH}"
 
+# Copia o script da ação para o contêiner
+COPY entrypoint.sh /entrypoint.sh
+
+# Permissões para o ponto de entrada
+RUN chmod +x /entrypoint.sh
+
 # Define o ponto de entrada para a GitHub Action
 ENTRYPOINT ["bash"]

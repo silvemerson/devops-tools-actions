@@ -6,19 +6,17 @@ on:
     branches:
       - main
 
+
 jobs:
-  run-custom-action:
+  run:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Run custom action
-        uses: ./
-        
-      - name: Teste kubectl
-        run: kubectl version --client
-      - name: Teste Terraform
-        run: terraform --version
-      - name: Teste SonarScanner
-        run: sonar-scanner --version
+      - name: Run Docker container with SonarScanner, kubectl, and Terraform
+        uses: ./  # Caminho para o repositório onde o Dockerfile e o action.yml estão
+        with:
+          sonar-command: "--version"
+          kubectl-command: "version --client"
+          terraform-command: "--version"

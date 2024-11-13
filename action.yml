@@ -8,3 +8,16 @@ runs:
     - ${{ inputs.sonar-command }}
     - ${{ inputs.kubectl-command }}
     - ${{ inputs.terraform-command }}
+
+inputs:
+  sonar-command:
+    description: "SonarScanner command arguments"
+    required: false
+
+  kubectl-command:
+    description: "kubectl command arguments"
+    required: false
+
+  terraform-command:
+    description: "Terraform command arguments"
+    required: false
