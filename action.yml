@@ -3,24 +3,8 @@ description: "Runs SonarScanner, Terraform, and kubectl commands in a containeri
 
 runs:
   using: "docker"
-  image: "Dockerfile"  # O Dockerfile que define o ambiente
+  image: "Dockerfile" 
   args:
     - ${{ inputs.sonar-command }}
     - ${{ inputs.kubectl-command }}
     - ${{ inputs.terraform-command }}
-
-inputs:
-  kubectl-command:
-    description: "Custom kubectl command to run"
-    required: false
-    default: "get pods" 
-
-  sonar-command:
-    description: "Custom SonarScanner command to run"
-    required: false
-    default: "sonar-scanner -Dsonar.projectKey=default" 
-
-  terraform-command:
-    description: "Custom Terraform command to run"
-    required: false
-    default: "terraform plan"  # Valor padrão
