@@ -24,9 +24,3 @@ inputs:
     description: "Custom Terraform command to run"
     required: false
     default: "terraform plan"  # Valor padrão
-
-env:
-  SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-  SONAR_SOURCES: ${{ github.workspace }}
-  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-  SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
