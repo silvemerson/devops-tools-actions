@@ -1,0 +1,20 @@
+name: DevOps Pipeline teste
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  devops:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run DevOps Tools Action
+        uses: silvemerson/devops-tools-actions@v1  # Usando a imagem com a versão correta
+        with:
+          sonar-command: "--version"
+          kubectl-command: "version --client"
+          terraform-command: "--version"
