@@ -1,0 +1,28 @@
+# action.yml
+name: "Custom GitHub Action with SonarScanner, kubectl, and Terraform"
+description: "Runs SonarScanner, Terraform, and kubectl commands in a containerized GitHub Action."
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.kubectl-args }}
+
+inputs:
+  kubectl-args:
+    description: "Arguments for kubectl command"
+    required: false
+    default: "get pods"
+
+env:
+  SONAR_PROJECT_KEY:
+    description: "Sonar project key"
+    required: true
+  SONAR_SOURCES:
+    description: "Sonar sources directory"
+    required: true
+  SONAR_HOST_URL:
+    description: "SonarQube server URL"
+    required: true
+  SONAR_LOGIN:
+    description: "SonarQube token"
+    required: true
