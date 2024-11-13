@@ -1,18 +1,23 @@
-# entrypoint.sh
 #!/bin/bash
-set -e
 
-# Exemplo de uso do SonarScanner, Terraform e kubectl
-echo "Running SonarScanner analysis..."
-sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-              -Dsonar.sources=$SONAR_SOURCES \
-              -Dsonar.host.url=$SONAR_HOST_URL \
-              -Dsonar.login=$SONAR_LOGIN
 
-echo "Running Terraform..."
-terraform init
-terraform plan
-terraform apply -auto-approve
+if [[ "$1" =~ ^kubectl ]]; then
+    echo "Executando kubectl: $1"
+    eval "$1"
+else
+    echo "Comando kubectl inválido ou não permitido."
+fi
 
-echo "Running kubectl..."
-kubectl $@
+if [[ "$2" =~ ^sonar-scanner ]]; then
+    echo "Executando SonarScanner: $2"
+    eval "$2"
+else
+    echo "Comando SonarScanner inválido ou não permitido."
+fi
+
+if [[ "$2" =~ ^terraform ]]; then
+    echo "Executando Terraform: $2"
+    eval "$2"
+else
+    echo "Comando Terraform inválido ou não permitido."
+fi
