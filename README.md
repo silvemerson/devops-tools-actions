@@ -1,50 +1,51 @@
-# Custom GitHub Action with SonarScanner, kubectl, and Terraform
+# DevOps Tools - SonarScanner, Terraform, and Kubectl GitHub Action
 
-Esta ação executa análises de código com SonarScanner, aplica configurações de infraestrutura com Terraform e gerencia recursos Kubernetes com kubectl.
+Este repositório contém uma ação do GitHub personalizada que executa **SonarScanner**, **kubectl**, e **Terraform** em um contêiner Docker.
 
-## Inputs
+A ação permite executar esses comandos essenciais de DevOps diretamente em seu pipeline do GitHub Actions de forma simples e integrada.
 
-- `kubectl-args`: Argumentos opcionais para o comando `kubectl`.
+## Tecnologias Utilizadas
 
-## Environment Variables
+- **SonarScanner**: Ferramenta para análise de código estático e qualidade de código.
+- **kubectl**: Ferramenta de linha de comando para interagir com clusters Kubernetes.
+- **Terraform**: Ferramenta de infraestrutura como código para provisionamento e gerenciamento de recursos.
 
-- `SONAR_PROJECT_KEY`: Chave do projeto no SonarQube.
-- `SONAR_SOURCES`: Diretório das fontes para análise.
-- `SONAR_HOST_URL`: URL do servidor SonarQube.
-- `SONAR_LOGIN`: Token de autenticação SonarQube.
+## Dockerfile
 
-## Exemplo de Uso
+Este repositório utiliza um Dockerfile para criar uma imagem Docker personalizada que inclui as ferramentas necessárias.
 
-```yaml
-jobs:
-  run-custom-action:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+### Dockerfile
 
-      - name: Run custom action
-        uses: your-username/your-action-repo@v1
-        with:
-          kubectl-args: "get namespaces"
-        env:
-          SONAR_PROJECT_KEY: "your_project_key"
-          SONAR_SOURCES: "./src"
-          SONAR_HOST_URL: "http://your-sonarqube-url"
-          SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
-```
-### 3. Versionamento e Criação de Tags
+```dockerfile
+FROM ubuntu:latest
 
-O GitHub Marketplace exige que ações estejam versionadas. Para isso:
-1. Faça o commit das mudanças na ação no repositório.
-2. Crie uma tag com o número da versão (por exemplo, `v1.0.0`).
+# Instala pacotes básicos e ferramentas necessárias
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    wget \
+    gnupg \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
 
-Execute no terminal:
+# Instalação do SonarScanner
+RUN wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip \
+    && unzip sonar-scanner-cli-4.8.0.2856-linux.zip -d /opt \
+    && rm sonar-scanner-cli-4.8.0.2856-linux.zip \
+    && ln -s /opt/sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner
 
-```bash
-git add .
-git commit -m "Initial release"
-git tag -a v1.0.0 -m "Release version 1.0.0"
-git push origin v1.0.0
-```
+# Instalação do kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+    && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
+    && rm kubectl
 
+# Instalação do Terraform
+RUN wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip \
+    && unzip terraform_1.5.7_linux_amd64.zip -d /usr/local/bin/ \
+    && rm terraform_1.5.7_linux_amd64.zip
+
+# Adiciona o SonarScanner ao PATH
+ENV PATH="/opt/sonar-scanner-4.8.0.2856-linux/bin:${PATH}"
+
+# Define o ponto de entrada para a GitHub Action
+ENTRYPOINT ["/entrypoint.sh"]

@@ -36,4 +36,4 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Define o ponto de entrada para a GitHub Action
-ENTRYPOINT ["bash"]
+ENTRYPOINT ["/entrypoint.sh"]
