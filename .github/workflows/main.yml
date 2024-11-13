@@ -17,7 +17,7 @@ jobs:
         uses: ./
         
       - name: Teste kubectl
-        run: kubectl version
+        run: kubectl version --client
       - name: Teste Terraform
         run: terraform --version
       - name: Teste SonarScanner
