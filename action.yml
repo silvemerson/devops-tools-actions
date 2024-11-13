@@ -1,28 +1,32 @@
-# action.yml
 name: "Custom GitHub Action with SonarScanner, kubectl, and Terraform"
 description: "Runs SonarScanner, Terraform, and kubectl commands in a containerized GitHub Action."
+
 runs:
   using: "docker"
-  image: "Dockerfile"
+  image: "Dockerfile"  # O Dockerfile que define o ambiente
   args:
-    - ${{ inputs.kubectl-args }}
+    - ${{ inputs.sonar-command }}
+    - ${{ inputs.kubectl-command }}
+    - ${{ inputs.terraform-command }}
 
 inputs:
-  kubectl-args:
-    description: "Arguments for kubectl command"
+  kubectl-command:
+    description: "Custom kubectl command to run"
     required: false
-    default: "get pods"
+    default: "get pods" 
+
+  sonar-command:
+    description: "Custom SonarScanner command to run"
+    required: false
+    default: "sonar-scanner -Dsonar.projectKey=default" 
+
+  terraform-command:
+    description: "Custom Terraform command to run"
+    required: false
+    default: "terraform plan"  # Valor padrão
 
 env:
-  SONAR_PROJECT_KEY:
-    description: "Sonar project key"
-    required: true
-  SONAR_SOURCES:
-    description: "Sonar sources directory"
-    required: true
-  SONAR_HOST_URL:
-    description: "SonarQube server URL"
-    required: true
-  SONAR_LOGIN:
-    description: "SonarQube token"
-    required: true
+  SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+  SONAR_SOURCES: ${{ github.workspace }}
+  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
